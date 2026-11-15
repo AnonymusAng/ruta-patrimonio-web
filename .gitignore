@@ -1,0 +1,12 @@
+# Dependencias y artefactos locales de Node/Vite
+node_modules/
+dist/
+.vite/
+.env
+.env.*
+!.env.example
+
+# Archivos del sistema y editores
+.DS_Store
+.vscode/
+.idea/

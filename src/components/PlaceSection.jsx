@@ -78,6 +78,7 @@ export default function PlaceSection({
             </article>
           ))}
         </div>
+        {places.length > 0 && visiblePlaces.length === 0 && <p className="empty">No hay lugares que coincidan con los filtros.</p>}
       </div>
     </section>
   )

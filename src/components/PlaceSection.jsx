@@ -1,8 +1,13 @@
+import { useMemo, useState } from 'react'
+
 /** Handles place creation, the optional edit bonus, and place removal. */
 export default function PlaceSection({
   categories, places, form, editingId, saving, loading,
   onFieldChange, onSubmit, onEdit, onCancelEdit, onDelete,
 }) {
+  const [query, setQuery] = useState('')
+  const visiblePlaces = useMemo(() => places.filter((item) => `${item.nombre} ${item.descripcion} ${item.direccion}`.toLowerCase().includes(query.trim().toLowerCase())), [places, query])
+
   return (
     <section aria-labelledby="places-title">
       <div className="section-heading">
@@ -46,9 +51,10 @@ export default function PlaceSection({
 
       <div className="list-block">
         <h3>Lugares registrados</h3>
+        <label htmlFor="place-search">Buscar lugar<input id="place-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, descripción o dirección" /></label>
         {places.length === 0 && !loading && <p className="empty">Aún no hay lugares.</p>}
         <div className="place-list">
-          {places.map((place) => (
+          {visiblePlaces.map((place) => (
             <article className="place-card" key={place.id}>
               <div className="place-topline">
                 <span className="tag">{place.categoria_nombre}</span>

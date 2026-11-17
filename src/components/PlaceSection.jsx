@@ -59,6 +59,7 @@ export default function PlaceSection({
         <label htmlFor="place-search">Buscar lugar<input id="place-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, descripción o dirección" /></label>
         <label htmlFor="place-category-filter">Filtrar por categoría<select id="place-category-filter" value={categoryFilter} onChange={(event) => setCategoryFilter(event.target.value)}><option value="">Todas</option>{categories.map((item) => <option key={item.id} value={item.id}>{item.nombre}</option>)}</select></label>
         {places.length === 0 && !loading && <p className="empty">Aún no hay lugares.</p>}
+        <button type="button" className="button button-secondary" onClick={() => { setQuery(''); setCategoryFilter('') }}>Limpiar filtros</button>
         <p className="hint" aria-live="polite">Mostrando {visiblePlaces.length} de {places.length} lugares.</p>
         <div className="place-list">
           {visiblePlaces.map((place) => (

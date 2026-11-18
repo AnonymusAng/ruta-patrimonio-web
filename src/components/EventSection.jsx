@@ -80,7 +80,7 @@ export default function EventSection({
         ))}
       </div>
       {events.length === 0 && !loading && <p className="empty">Aún no hay eventos.</p>}
+      {events.length > 0 && visibleEvents.length === 0 && <p className="empty">No hay eventos que coincidan con los filtros.</p>}
     </section>
   )
 }
-

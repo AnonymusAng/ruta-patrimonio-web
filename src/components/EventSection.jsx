@@ -59,6 +59,7 @@ export default function EventSection({
 
       <label htmlFor="event-search">Buscar evento<input id="event-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, descripción o lugar" /></label>
       <label className="checkbox-row"><input type="checkbox" checked={showUpcoming} onChange={(event) => setShowUpcoming(event.target.checked)} /> Mostrar solo eventos próximos o sin fecha</label>
+      <p className="hint" aria-live="polite">Mostrando {visibleEvents.length} de {events.length} eventos.</p>
       <div className="place-list event-list">
         {visibleEvents.map((item) => (
           <article className="place-card" key={item.id}>

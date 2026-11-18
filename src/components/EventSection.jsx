@@ -11,7 +11,12 @@ export default function EventSection({
   }
 
   const [query, setQuery] = useState('')
-  const visibleEvents = useMemo(() => events.filter((item) => `${item.nombre} ${item.descripcion} ${item.lugar_nombre}`.toLowerCase().includes(query.trim().toLowerCase())), [events, query])
+  const [showUpcoming, setShowUpcoming] = useState(false)
+  const visibleEvents = useMemo(() => events.filter((item) => {
+    const matchesText = `${item.nombre} ${item.descripcion} ${item.lugar_nombre}`.toLowerCase().includes(query.trim().toLowerCase())
+    const matchesDate = !showUpcoming || !item.fecha || item.fecha >= new Date().toISOString().slice(0, 10)
+    return matchesText && matchesDate
+  }), [events, query, showUpcoming])
 
   return (
     <section className="list-block" aria-labelledby="events-title">
@@ -53,6 +58,7 @@ export default function EventSection({
       </form>
 
       <label htmlFor="event-search">Buscar evento<input id="event-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, descripción o lugar" /></label>
+      <label className="checkbox-row"><input type="checkbox" checked={showUpcoming} onChange={(event) => setShowUpcoming(event.target.checked)} /> Mostrar solo eventos próximos o sin fecha</label>
       <div className="place-list event-list">
         {visibleEvents.map((item) => (
           <article className="place-card" key={item.id}>

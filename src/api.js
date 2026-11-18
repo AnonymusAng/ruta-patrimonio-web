@@ -47,7 +47,8 @@ export const api = {
   createPlace: (data) => request('/lugares/', { method: 'POST', body: JSON.stringify(data) }),
   updatePlace: (id, data) => request(`/lugares/${id}/`, { method: 'PUT', body: JSON.stringify(data) }),
   deletePlace: (id) => request(`/lugares/${id}/`, { method: 'DELETE' }),
-  listEvents: () => request('/eventos/'),
-  createEvent: (data) => request('/eventos/', { method: 'POST', body: JSON.stringify(data) }),
-  deleteEvent: (id) => request(`/eventos/${id}/`, { method: 'DELETE' }),
+ listEvents: () => request('/eventos/'),
+createEvent: (data) => request('/eventos/', { method: 'POST', body: JSON.stringify(data) }),
+updateEvent: (id, data) => request(`/eventos/${id}/`, { method: 'PUT', body: JSON.stringify(data) }),
+deleteEvent: (id) => request(`/eventos/${id}/`, { method: 'DELETE' }),  
 }

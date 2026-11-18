@@ -18,6 +18,7 @@ export default function App() {
   const [placeForm, setPlaceForm] = useState(emptyPlace)
   const [eventForm, setEventForm] = useState(emptyEvent)
   const [editingPlaceId, setEditingPlaceId] = useState(null)
+  const [editingEventId, setEditingEventId] = useState(null)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
@@ -113,20 +114,50 @@ export default function App() {
     setPlaceForm(emptyPlace)
   }
 
-  async function handleEventSubmit(event) {
-    event.preventDefault()
-    const payload = {
-      ...eventForm,
-      lugar: Number(eventForm.lugar),
-      fecha: eventForm.fecha || null,
-    }
 
-    await runMutation(
-      () => api.createEvent(payload),
-      'Evento creado correctamente.',
-      () => setEventForm(emptyEvent),
-    )
+async function handleEventSubmit(event) {
+  event.preventDefault()
+
+  const payload = {
+    ...eventForm,
+    lugar: Number(eventForm.lugar),
+    fecha: eventForm.fecha || null,
+    activo: eventForm.activo ?? true,
   }
+
+  const isEditing = editingEventId !== null
+
+  const action = isEditing
+    ? () => api.updateEvent(editingEventId, payload)
+    : () => api.createEvent(payload)
+
+  await runMutation(
+    action,
+    isEditing
+      ? 'Evento actualizado correctamente.'
+      : 'Evento creado correctamente.',
+    cancelEventEdit,
+  )
+}
+
+function startEventEdit(item) {
+  setEditingEventId(item.id)
+  setEventForm({
+    lugar: String(item.lugar),
+    nombre: item.nombre,
+    descripcion: item.descripcion,
+    fecha: item.fecha || '',
+    activo: item.activo,
+  })
+  setNotice('Editando el evento seleccionado.')
+  setError('')
+}
+
+function cancelEventEdit() {
+  setEditingEventId(null)
+  setEventForm(emptyEvent)
+}
+
 
   // Confirm destructive actions and keep related records protected by the API.
   async function handleDelete(resource, record, label) {
@@ -180,16 +211,22 @@ export default function App() {
             onDelete={(place) => handleDelete(api.deletePlace, place, 'lugar')}
           />
 
-          <EventSection
-            events={events}
-            places={places}
-            form={eventForm}
-            saving={saving}
-            loading={loading}
-            onFieldChange={(field, value) => setEventForm((current) => ({ ...current, [field]: value }))}
-            onSubmit={handleEventSubmit}
-            onDelete={(item) => handleDelete(api.deleteEvent, item, 'evento')}
-          />
+         <EventSection
+  events={events}
+  places={places}
+  form={eventForm}
+  editingId={editingEventId}
+  saving={saving}
+  loading={loading}
+  onFieldChange={(field, value) =>
+    setEventForm((current) => ({ ...current, [field]: value }))
+  }
+  onSubmit={handleEventSubmit}
+  onEdit={startEventEdit}
+  onCancelEdit={cancelEventEdit}
+  onDelete={(item) => handleDelete(api.deleteEvent, item, 'evento')}
+/>
+  
         </div>
       </section>
 

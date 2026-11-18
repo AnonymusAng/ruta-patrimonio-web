@@ -1,3 +1,6 @@
+
+import { useMemo, useState } from 'react'
+
 /** Event form and list. Every event must reference an existing place. */
 export default function EventSection({
   events, places, form, saving, loading, onFieldChange, onSubmit, onDelete,
@@ -6,6 +9,9 @@ export default function EventSection({
     if (!value) return ''
     return new Date(`${value}T00:00:00`).toLocaleDateString('es-CO')
   }
+
+  const [query, setQuery] = useState('')
+  const visibleEvents = useMemo(() => events.filter((item) => `${item.nombre} ${item.descripcion} ${item.lugar_nombre}`.toLowerCase().includes(query.trim().toLowerCase())), [events, query])
 
   return (
     <section className="list-block" aria-labelledby="events-title">
@@ -46,8 +52,9 @@ export default function EventSection({
         </div>
       </form>
 
+      <label htmlFor="event-search">Buscar evento<input id="event-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Nombre, descripción o lugar" /></label>
       <div className="place-list event-list">
-        {events.map((item) => (
+        {visibleEvents.map((item) => (
           <article className="place-card" key={item.id}>
             <div className="place-topline">
               <span className="tag">{item.lugar_nombre}</span>
